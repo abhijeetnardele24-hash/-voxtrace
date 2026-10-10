@@ -14,7 +14,7 @@ VoxTrace is a Track C entry for the [Multimodal AI Hackathon 2026](https://multi
 
 ## Submission status
 
-VoxTrace is an actively developed hackathon prototype. The deterministic analysis engine, ideal-vs-target comparison, optional phoneme forced-alignment path, dataset-generation tooling, evaluation tooling, and judge-facing dashboard work. The repository now includes an 18-recording, three-speaker licensed stress preview derived from LibriSpeech (CC BY 4.0), plus a speaker-held-out pipeline stress report. Its generated labels remain pending and are not human-reviewed ground truth. Public access, a natural-speech reviewed benchmark, and the video still require submission-owner input.
+VoxTrace is an actively developed hackathon prototype. The deterministic analysis engine, ideal-vs-target comparison, optional phoneme forced-alignment path, dataset-generation tooling, evaluation tooling, and judge-facing dashboard work. The repository includes an 18-recording, three-speaker licensed stress preview derived from LibriSpeech (CC BY 4.0), plus a speaker-held-out pipeline stress report. Its generated labels remain pending and are not human-reviewed ground truth. The repository, production demo, and [7:37 demo video](https://youtu.be/9_Q-G7CWDa0) are public or unlisted for judging; a natural-speech reviewed benchmark remains future work.
 
 | Track C requirement | Current evidence | Status |
 |---|---|---|
@@ -218,8 +218,8 @@ No generative model is currently used at runtime to score speech. The current sc
 - [ ] Run the final held-out-speaker evaluation on human-reviewed natural labels.
 - [x] Produce and visually verify a five-page technical report plus editable source.
 - [x] Deploy and verify an owner-only production demo.
-- [ ] Make the verified demo public after the submission owner approves public access.
-- [ ] Record a 3–10 minute YouTube demo covering dataset construction, stress testing, and timestamped detections.
+- [x] Make the verified demo public after the submission owner approves public access.
+- [x] Publish a 7:37 unlisted YouTube demo covering dataset construction, stress testing, and timestamped detections.
 - [ ] Complete all Devpost fields, preview the public page, and submit before **15 October 2026 at 12:15 AM IST**.
 
 ## Repository map

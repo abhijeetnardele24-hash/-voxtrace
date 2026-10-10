@@ -62,8 +62,8 @@ Before final submission we will review the generated labels, make the verified d
 ## Links
 
 - GitHub: <https://github.com/abhijeetnardele24-hash/-voxtrace>
-- Live demo (currently owner-only): <https://voxtrace-speech-audit.exactgoat128.chatgpt.site>
-- Video: `<add public or unlisted YouTube URL>`
+- Live demo: <https://voxtrace-speech-audit.exactgoat128.chatgpt.site>
+- Video: <https://youtu.be/9_Q-G7CWDa0>
 
 ## Additional information
 
