@@ -220,7 +220,7 @@ No generative model is currently used at runtime to score speech. The current sc
 - [x] Deploy and verify an owner-only production demo.
 - [x] Make the verified demo public after the submission owner approves public access.
 - [x] Publish a 7:37 unlisted YouTube demo covering dataset construction, stress testing, and timestamped detections.
-- [ ] Complete all Devpost fields, preview the public page, and submit before **15 October 2026 at 12:15 AM IST**.
+- [x] Complete all Devpost fields, preview the public page, and submit before **15 October 2026 at 12:15 AM IST**.
 
 ## Repository map
 

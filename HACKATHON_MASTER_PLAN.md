@@ -233,12 +233,12 @@ devpost project/
 
 ### Phase 1 — Foundation
 
-- [ ] Create public GitHub repository.
+- [x] Create public GitHub repository.
 - [x] Add license and `.gitignore`.
 - [x] Add dataset card and consent/licence log.
 - [x] Lock a small, high-quality stress-preview scope.
 - [x] Source licensed references and generate the first paired examples.
-- [ ] Create Devpost draft now; do not wait until the last day.
+- [x] Create Devpost draft now; do not wait until the last day.
 
 ### Phase 2 — Credible analysis
 
@@ -261,10 +261,10 @@ devpost project/
 - [x] Run a clearly labelled synthetic held-out-speaker stress test.
 - [x] Generate tables and evidence for the README and five-page report.
 - [x] Run backend and production frontend verification.
-- [ ] Record video.
-- [ ] Add screenshots, GitHub URL, video URL and all real teammates to Devpost.
-- [ ] Preview every Devpost page while logged out.
-- [ ] Submit before the deadline and verify Devpost shows “Submitted.”
+- [x] Record and publish the 7:37 narrated demo video.
+- [x] Add screenshots, GitHub URL, video URL and all real teammates to Devpost.
+- [x] Preview the public Devpost project page.
+- [x] Submit before the deadline and verify Devpost shows “Project submitted.”
 
 ## 11. Demo Video Script (6–8 Minutes)
 
