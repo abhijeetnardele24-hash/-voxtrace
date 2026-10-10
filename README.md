@@ -1,5 +1,6 @@
 # VoxTrace
 
+> 🚀 **V2 UI Overhaul:** VoxTrace now features an ultra-premium, modern glassmorphism UI with dynamic neon accents and Outfit typography.
 > An explainable speech coach that locates delivery flaws to the exact second.
 
 ![VoxTrace project thumbnail](docs/assets/voxtrace-devpost-thumbnail.png)
