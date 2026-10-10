@@ -11,7 +11,13 @@ export type FeatureWindow = {
   speech_rate_wpm?: number;
   pause_seconds?: number;
   pitch_variation_semitones?: number;
+  mean_f0_hz?: number;
   energy_db?: number;
+  spectral_centroid_hz?: number;
+  spectral_rolloff_hz?: number;
+  spectral_flatness?: number;
+  zero_crossing_rate?: number;
+  mfcc_means?: number[];
   clarity_score?: number;
 };
 
@@ -31,7 +37,35 @@ export type AnalysisResult = {
   scoring_profile: Record<string, number>;
 };
 
+export type WindowComparison = {
+  start_seconds: number;
+  end_seconds: number;
+  reference_start_seconds: number;
+  reference_end_seconds: number;
+  observed: Record<string, number>;
+  reference: Record<string, number>;
+  deltas: Record<string, number>;
+};
+
+export type ContrastiveAnalysis = {
+  reference_profile: Record<string, number>;
+  analysis: AnalysisResult;
+  comparisons: WindowComparison[];
+  data_completeness: Record<string, boolean>;
+  reference_duration_seconds?: number;
+  target_duration_seconds?: number;
+  timing_mode?: string;
+};
+
 const apiBase = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+
+async function responseJson<T>(response: Response, fallback: string): Promise<T> {
+  if (!response.ok) {
+    const body = (await response.json().catch(() => null)) as { detail?: string } | null;
+    throw new Error(body?.detail ?? `${fallback} (${response.status}).`);
+  }
+  return (await response.json()) as T;
+}
 
 export async function analyzeWindows(windows: FeatureWindow[]): Promise<AnalysisResult> {
   const response = await fetch(`${apiBase}/v1/analyze/windows`, {
@@ -39,11 +73,22 @@ export async function analyzeWindows(windows: FeatureWindow[]): Promise<Analysis
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ windows }),
   });
-  if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as { detail?: string } | null;
-    throw new Error(body?.detail ?? `Analysis failed (${response.status}).`);
-  }
-  return (await response.json()) as AnalysisResult;
+  return responseJson<AnalysisResult>(response, "Analysis failed");
+}
+
+export async function compareWindows(
+  referenceWindows: FeatureWindow[],
+  targetWindows: FeatureWindow[],
+): Promise<ContrastiveAnalysis> {
+  const response = await fetch(`${apiBase}/v1/compare/windows`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      reference_windows: referenceWindows,
+      target_windows: targetWindows,
+    }),
+  });
+  return responseJson<ContrastiveAnalysis>(response, "Comparison failed");
 }
 
 export async function extractAcousticWindows(audio: File): Promise<FeatureWindow[]> {
@@ -53,10 +98,17 @@ export async function extractAcousticWindows(audio: File): Promise<FeatureWindow
     method: "POST",
     body,
   });
-  if (!response.ok) {
-    const payload = (await response.json().catch(() => null)) as { detail?: string } | null;
-    throw new Error(payload?.detail ?? `Audio upload failed (${response.status}).`);
-  }
-  const payload = (await response.json()) as { windows: FeatureWindow[] };
+  const payload = await responseJson<{ windows: FeatureWindow[] }>(response, "Audio upload failed");
   return payload.windows;
+}
+
+export async function compareAudio(
+  referenceAudio: File,
+  targetAudio: File,
+): Promise<ContrastiveAnalysis> {
+  const body = new FormData();
+  body.append("reference_audio", referenceAudio);
+  body.append("target_audio", targetAudio);
+  const response = await fetch(`${apiBase}/v1/audio/compare`, { method: "POST", body });
+  return responseJson<ContrastiveAnalysis>(response, "Audio comparison failed");
 }

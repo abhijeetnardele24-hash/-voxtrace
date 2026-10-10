@@ -1,0 +1,135 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=0.7in]{geometry}
+\usepackage{booktabs,tabularx,amsmath,xcolor,hyperref,enumitem}
+\definecolor{accent}{HTML}{087F6B}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent}
+\setlist{nosep,leftmargin=*}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\title{\vspace{-1.3cm}\textbf{VoxTrace}\\\large Contrastive Speech Analytics and Temporal Flaw Grounding}
+\author{Abhijeet Nardele\quad---\quad Multimodal AI Hackathon 2026, Track C}
+\date{10 October 2026}
+
+\begin{document}
+\maketitle
+\vspace{-0.5cm}
+
+\begin{abstract}
+VoxTrace is an evidence-first speech-delivery analysis system. Given an effective reference recording, a target recording of the same script, and optionally a transcript, it extracts timestamped acoustic features, maps target windows to the reference, and generates deterministic rubric scores and causal practice guidance. The system never substitutes missing measurements with inferred values. This report documents the dataset contract, feature pipeline, temporal comparison, scoring method, evaluation protocol, dashboard, reproducibility, security controls, and limitations.
+\end{abstract}
+
+\section{Problem and contribution}
+Competitive speaking feedback often identifies a symptom (``too fast'', ``flat'', ``quiet'') without locating the failure or exposing the mathematical evidence. VoxTrace contributes:
+\begin{enumerate}
+  \item a consent- and licence-aware same-script contrastive dataset workflow;
+  \item bounded acoustic windows with FFT, cepstral, energy, pitch, pause, and rate descriptors;
+  \item optional phoneme forced alignment with explicit provenance;
+  \item reference-derived thresholds and normalized temporal comparison;
+  \item deterministic findings that bind time, measurement, rule, explanation, and action;
+  \item a judge-facing dashboard and speaker-held-out evaluation utilities.
+\end{enumerate}
+
+\section{System architecture}
+\begin{center}
+\fbox{WAV + transcript} $\rightarrow$ \fbox{validation} $\rightarrow$ \fbox{feature windows} $\rightarrow$ \fbox{reference comparison} $\rightarrow$ \fbox{rubric scorer} $\rightarrow$ \fbox{dashboard}
+\end{center}
+The API accepts only bounded 16-bit PCM WAV input in the baseline deployment. Files are size- and duration-limited, decoded through temporary storage, then removed. The target and reference recordings are processed independently before comparison. Word timing is accepted only from reviewed timestamps or the optional WhisperX phoneme alignment path.
+
+\subsection{Trust boundaries}
+All request values are validated server-side. The service does not construct commands from filenames or transcripts. Anonymous processing is rate-limited; feature/window counts and transcripts are bounded. Alignment is disabled by default because model loading is resource intensive, and production model downloads can be restricted to a pre-warmed cache.
+
+\newpage
+\section{Feature extraction}
+Audio is downmixed deterministically to mono. For a window $x[n]$ of $N$ samples, energy is reported in dBFS:
+\[
+E_{\mathrm{dBFS}}=20\log_{10}\left(\frac{\sqrt{\frac{1}{N}\sum_n x[n]^2}}{32768}\right).
+\]
+Silence windows use a documented dBFS threshold. Pitch candidates are conservatively estimated on short voiced frames; mean F0 and the standard deviation of semitone offsets are retained only when candidates exist.
+
+The Hann-windowed real FFT yields magnitude $X[k]$. Spectral centroid and 85\% rolloff are computed from the power spectrum. Spectral flatness is the geometric-to-arithmetic mean ratio. Zero-crossing rate is measured directly in the time domain. Thirteen compact cepstral coefficients are calculated by a cosine transform of log spectral power. These values expose spectral structure without silently converting them into an unvalidated ``clarity'' claim.
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+Family & Measurements & Provenance \\
+\midrule
+Amplitude & dBFS energy, silence duration & WAV samples \\
+Pitch & mean F0, semitone variation & voiced microframes \\
+Spectrum & centroid, rolloff, flatness, 13 cepstral means & FFT power \\
+Timing & WPM, word-boundary pauses & forced/reviewed word timestamps \\
+Labels & flaw interval, type, severity, review state & human-reviewed manifest \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Forced alignment}
+The optional alignment worker constructs a fixed-transcript segment spanning the validated audio and uses a language-specific WhisperX phoneme model. Returned words must have finite, ordered, non-overlapping timestamps. Unaligned tokens are not fabricated. The response states `whisperx\_phoneme\_forced\_alignment' as its timing provenance. The lightweight default installation keeps this worker disabled; alignment dependencies and model lifecycle are isolated from the web process.
+
+\newpage
+\section{Contrastive dataset and stress testing}
+Each script has one effective reference and controlled variants: near-perfect, rushed, excessive-pause, low-energy, and mixed-flaw. A generator can create reviewable stress variants from a licensed reference WAV while preserving the transcript. Generated intervals are marked pending until a human verifies them.
+
+Every manifest includes recording, script and pseudonymous speaker identifiers; audio path; sampling rate and duration; licence and consent record; transcript; variant type; and typed temporal labels. Reference recordings cannot contain intentional-flaw labels. Non-reference recordings require at least one label.
+
+Splits operate by speaker, never by recording. If $S_{train}$ and $S_{test}$ are speaker sets, VoxTrace enforces $S_{train}\cap S_{test}=\varnothing$. This prevents the same voice from appearing in calibration and evaluation.
+
+\subsection{Reference comparison}
+Because deliberate pacing flaws change duration, target windows are mapped to reference windows by normalized same-script midpoint. For target midpoint $t$ and duration $T$, the expected reference time is $(t/T)R$, where $R$ is reference duration. The nearest reference midpoint supplies feature deltas. Speech-rate targets use a robust band around the reference median; pause ceilings and feature floors use documented reference percentiles.
+
+This normalized mapping is a transparent baseline for the dashboard. Word-level forced alignment is used when exact lexical timing is required.
+
+\section{Deterministic scoring and explanations}
+Pace, prosody, energy and clarity dimensions have explicit weights. A dimension is omitted when its required measurement is missing; overall score weights are renormalized only across available dimensions. Severity is a bounded relative deviation, not a probability or confidence value:
+\[
+s=\min\left(1,\frac{|x-\tau|}{\max(|\tau|,1)}\right),
+\]
+where $x$ is observed measurement and $\tau$ is the reference threshold.
+
+Each finding contains finding type, exact start/end, severity, evidence sentence with units and threshold, and a practice action. No generative model participates in scoring.
+
+\newpage
+\section{Evaluation protocol}
+Predicted and reviewed intervals are matched one-to-one within the same category. Temporal intersection-over-union is
+\[
+\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}.
+\]
+A match requires a configurable minimum IoU (default 0.5). The report contains per-category true positives, false positives, false negatives, precision, recall and F1; macro F1; and mean IoU across matched intervals. Final reporting must also include speaker counts, recording counts, alignment version, window size, processing time, run-to-run agreement, and severity correlation when sufficient reviewed labels exist.
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+Evidence item & Current state \\
+\midrule
+Temporal evaluator & Implemented and covered by automated tests \\
+Speaker-held-out splitter & Implemented and leakage-tested \\
+Final licensed recordings & Requires team recording/consent step \\
+Reviewed labels & Generated labels remain pending until reviewed \\
+Measured final metrics & Published only after final dataset collection \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Dashboard}
+The React dashboard presents run provenance, data completeness, overall and dimension scores, two recording inputs, shared transcript, paired reference/target energy bars, flaw intervals, causal evidence and the highest-severity practice action. Seeded demo values are checked into source; live values arrive only from API measurements. The interface remains usable without alignment and visibly identifies missing timing or clarity features.
+
+\section{Reproducibility}
+The repository provides pinned dependency ranges, Docker configuration, deterministic CLI tools, a dataset card, evaluation protocol, AI-assistance disclosure, and 24 passing automated tests at the time of this report. The frontend TypeScript compilation and Vite production build also pass.
+
+\newpage
+\section{Responsible use and limitations}
+VoxTrace is an educational feedback prototype, not a medical, psychological, employment, or authoritative judging system. Acoustic delivery does not fully measure reasoning quality, rhetorical content, accent, culture, or audience context. Results depend on microphone, room, noise, transcript and alignment quality. Pitch estimation is conservative; forced alignment may degrade for noise, code-switching and unsupported languages.
+
+Speech can contain biometric and personal information. The prototype avoids persistence. A production service must add authentication, ownership checks, encryption, retention controls, deletion, structured audit logs, distributed rate limiting, and a documented model-update process before storing recordings.
+
+\section{AI assistance disclosure}
+ByteAsk/ChatGPT and OpenAI Codex assisted planning, architecture, code and test development, audit, documentation and interface exploration. Human contributors remain responsible for code review, licences, consent, measurements and submission claims. AI coding assistance is not used as runtime evidence.
+
+\section{Conclusion}
+VoxTrace reframes speech coaching as an auditable temporal measurement problem. Its strongest property is not a single model: it is the evidence chain from licensed paired data, to bounded features, to reference deltas, to exact intervals, to explanations that a speaker or judge can inspect and reproduce.
+
+\section*{Repository}
+\url{https://github.com/abhijeetnardele24-hash/-voxtrace}
+
+\end{document}

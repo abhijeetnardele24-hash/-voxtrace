@@ -33,6 +33,27 @@ export const demoWindows: FeatureWindow[] = [
   },
 ];
 
+export const demoReferenceWindows: FeatureWindow[] = [
+  {
+    start_seconds: 0, end_seconds: 5, speech_rate_wpm: 145, pause_seconds: 0.35,
+    pitch_variation_semitones: 2.2, mean_f0_hz: 184, energy_db: -20,
+    spectral_centroid_hz: 1520, spectral_rolloff_hz: 2960,
+    spectral_flatness: 0.12, zero_crossing_rate: 0.08, clarity_score: 0.91,
+  },
+  {
+    start_seconds: 5, end_seconds: 10, speech_rate_wpm: 148, pause_seconds: 0.4,
+    pitch_variation_semitones: 2.4, mean_f0_hz: 192, energy_db: -21,
+    spectral_centroid_hz: 1600, spectral_rolloff_hz: 3050,
+    spectral_flatness: 0.1, zero_crossing_rate: 0.09, clarity_score: 0.92,
+  },
+  {
+    start_seconds: 10, end_seconds: 15, speech_rate_wpm: 142, pause_seconds: 0.55,
+    pitch_variation_semitones: 2.0, mean_f0_hz: 178, energy_db: -22,
+    spectral_centroid_hz: 1490, spectral_rolloff_hz: 2870,
+    spectral_flatness: 0.13, zero_crossing_rate: 0.08, clarity_score: 0.9,
+  },
+];
+
 export const fallbackDemoResult: AnalysisResult = {
   overall_score: 69.2,
   dimension_scores: {

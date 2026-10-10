@@ -9,6 +9,8 @@ import wave
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
+
 from .domain import FeatureWindow
 
 
@@ -135,12 +137,12 @@ def _estimate_zero_crossing_pitch_hz(
     return estimated_hz
 
 
-def _pitch_variation_semitones(
+def _pitch_summary(
     samples: tuple[int, ...],
     sample_rate_hz: int,
     microframe_seconds: float,
     silence_threshold_dbfs: float,
-) -> float | None:
+) -> tuple[float | None, float | None]:
     microframe_size = max(1, round(sample_rate_hz * microframe_seconds))
     pitches = [
         pitch
@@ -155,11 +157,51 @@ def _pitch_variation_semitones(
         )
         if pitch is not None
     ]
-    if len(pitches) < 2:
-        return None
+    if not pitches:
+        return None, None
     reference_hz = statistics.median(pitches)
+    if len(pitches) < 2:
+        return round(reference_hz, 2), 0.0
     semitone_offsets = [12 * math.log2(pitch / reference_hz) for pitch in pitches]
-    return round(statistics.pstdev(semitone_offsets), 2)
+    return round(statistics.mean(pitches), 2), round(statistics.pstdev(semitone_offsets), 2)
+
+
+def _spectral_features(
+    samples: tuple[int, ...], sample_rate_hz: int
+) -> tuple[float, float, float, float, tuple[float, ...]]:
+    """Return transparent FFT-derived descriptors and 13 compact cepstral coefficients."""
+
+    normalized = np.asarray(samples, dtype=np.float64) / 32768.0
+    if normalized.size < 2:
+        return 0.0, 0.0, 0.0, 0.0, tuple(0.0 for _ in range(13))
+    windowed = normalized * np.hanning(normalized.size)
+    magnitude = np.abs(np.fft.rfft(windowed)) + 1e-12
+    power = magnitude**2
+    frequencies = np.fft.rfftfreq(normalized.size, d=1.0 / sample_rate_hz)
+    total = float(power.sum())
+    centroid = float((frequencies * power).sum() / total) if total else 0.0
+    cumulative = np.cumsum(power)
+    rolloff_index = int(np.searchsorted(cumulative, 0.85 * total)) if total else 0
+    rolloff_index = min(rolloff_index, len(frequencies) - 1)
+    flatness = float(np.exp(np.mean(np.log(magnitude))) / np.mean(magnitude))
+    zero_crossings = np.count_nonzero(np.diff(np.signbit(normalized)))
+    zcr = float(zero_crossings / max(1, normalized.size - 1))
+
+    log_spectrum = np.log(power)
+    coefficients = []
+    sample_positions = np.arange(log_spectrum.size)
+    for coefficient_index in range(13):
+        basis = np.cos(
+            math.pi * coefficient_index * (sample_positions + 0.5) / log_spectrum.size
+        )
+        coefficients.append(round(float(np.dot(log_spectrum, basis) / log_spectrum.size), 4))
+    return (
+        round(centroid, 2),
+        round(float(frequencies[rolloff_index]), 2),
+        round(max(0.0, min(flatness, 1.0)), 4),
+        round(max(0.0, min(zcr, 1.0)), 4),
+        tuple(coefficients),
+    )
 
 
 def extract_acoustic_windows(
@@ -185,20 +227,30 @@ def extract_acoustic_windows(
         end_seconds = min(len(audio.samples), offset + samples_per_window) / audio.sample_rate_hz
         energy_db = _decibels_full_scale(chunk)
         is_silent = energy_db <= silence_threshold_dbfs
+        mean_f0_hz, pitch_variation = (None, None)
+        if not is_silent:
+            mean_f0_hz, pitch_variation = _pitch_summary(
+                chunk,
+                audio.sample_rate_hz,
+                microframe_seconds,
+                silence_threshold_dbfs,
+            )
+        centroid, rolloff, flatness, zcr, mfcc_means = _spectral_features(
+            chunk, audio.sample_rate_hz
+        )
         windows.append(
             FeatureWindow(
                 start_seconds=round(start_seconds, 3),
                 end_seconds=round(end_seconds, 3),
                 energy_db=energy_db,
                 pause_seconds=round(end_seconds - start_seconds, 3) if is_silent else 0.0,
-                pitch_variation_semitones=None
-                if is_silent
-                else _pitch_variation_semitones(
-                    chunk,
-                    audio.sample_rate_hz,
-                    microframe_seconds,
-                    silence_threshold_dbfs,
-                ),
+                pitch_variation_semitones=pitch_variation,
+                mean_f0_hz=mean_f0_hz,
+                spectral_centroid_hz=centroid,
+                spectral_rolloff_hz=rolloff,
+                spectral_flatness=flatness,
+                zero_crossing_rate=zcr,
+                mfcc_means=mfcc_means,
             )
         )
     return tuple(windows)

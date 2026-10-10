@@ -64,6 +64,8 @@ class RecordingManifest:
     consent_record: str
     transcript: str
     labels: tuple[TemporalLabel, ...]
+    audio_path: str | None = None
+    sample_rate_hz: int | None = None
 
     @classmethod
     def from_mapping(cls, data: dict[str, Any]) -> "RecordingManifest":
@@ -93,6 +95,10 @@ class RecordingManifest:
                 consent_record=str(data["consent_record"]).strip(),
                 transcript=str(data["transcript"]).strip(),
                 labels=tuple(TemporalLabel.from_mapping(item) for item in data["labels"]),
+                audio_path=str(data["audio_path"]).strip() if data.get("audio_path") else None,
+                sample_rate_hz=int(data["sample_rate_hz"])
+                if data.get("sample_rate_hz") is not None
+                else None,
             )
         except (TypeError, ValueError) as error:
             raise ValueError(f"invalid recording manifest: {error}") from error
@@ -109,6 +115,10 @@ class RecordingManifest:
             raise ValueError("consent_record cannot be blank")
         if not manifest.transcript:
             raise ValueError("transcript cannot be blank")
+        if manifest.audio_path is not None and not manifest.audio_path.lower().endswith(".wav"):
+            raise ValueError("audio_path must reference a WAV file")
+        if manifest.sample_rate_hz is not None and not 8_000 <= manifest.sample_rate_hz <= 192_000:
+            raise ValueError("sample_rate_hz must be between 8000 and 192000")
         if manifest.variant_type == "reference" and manifest.labels:
             raise ValueError("reference recordings must not contain intentional flaw labels")
         if manifest.variant_type != "reference" and not manifest.labels:

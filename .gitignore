@@ -32,5 +32,8 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Design tool temporary files
-.superdesign/tmp/
+# Local design-tool working files
+.superdesign/
+
+# Separate private Sites deployment checkout and packages
+sites/

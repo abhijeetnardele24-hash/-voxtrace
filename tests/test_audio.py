@@ -79,7 +79,9 @@ def test_audio_endpoint_returns_measured_windows(tmp_path: Path) -> None:
     payload = response.json()
     assert payload["duration_seconds"] == 1.0
     assert payload["windows"][0]["energy_db"] > -45
-    assert payload["analysis_capability"] == "baseline_dsp_energy_pause_pitch_variation"
+    assert payload["analysis_capability"] == "fft_mfcc_energy_pause_f0_pitch_variation"
+    assert len(payload["windows"][0]["mfcc_means"]) == 13
+    assert payload["windows"][0]["spectral_centroid_hz"] >= 0
 
 
 def test_uploaded_audio_features_flow_into_scoring(tmp_path: Path) -> None:
@@ -118,3 +120,29 @@ def test_dashboard_origin_is_allowed() -> None:
 
     assert response.status_code == 200
     assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+
+
+def test_audio_comparison_returns_measured_deltas(tmp_path: Path) -> None:
+    reference_path = tmp_path / "reference.wav"
+    target_path = tmp_path / "target.wav"
+    _write_pcm_wav(reference_path, [4_000] * 8_000)
+    _write_pcm_wav(target_path, [1_000] * 8_000)
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1/audio/compare",
+            files={
+                "reference_audio": (
+                    "reference.wav",
+                    reference_path.read_bytes(),
+                    "audio/wav",
+                ),
+                "target_audio": ("target.wav", target_path.read_bytes(), "audio/wav"),
+            },
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["timing_mode"] == "normalized_same_script_comparison"
+    assert payload["comparisons"][0]["deltas"]["energy_db"] < 0
+    assert payload["data_completeness"]["spectral_centroid_hz"] is True

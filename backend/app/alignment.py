@@ -85,7 +85,13 @@ def apply_word_timing(
                 speech_rate_wpm=rate,
                 pause_seconds=pause,
                 pitch_variation_semitones=window.pitch_variation_semitones,
+                mean_f0_hz=window.mean_f0_hz,
                 energy_db=window.energy_db,
+                spectral_centroid_hz=window.spectral_centroid_hz,
+                spectral_rolloff_hz=window.spectral_rolloff_hz,
+                spectral_flatness=window.spectral_flatness,
+                zero_crossing_rate=window.zero_crossing_rate,
+                mfcc_means=window.mfcc_means,
                 clarity_score=window.clarity_score,
             )
         )

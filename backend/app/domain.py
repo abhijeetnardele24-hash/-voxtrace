@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from enum import StrEnum
+import math
 from typing import Any
 
 
@@ -28,7 +29,13 @@ class FeatureWindow:
     speech_rate_wpm: float | None = None
     pause_seconds: float | None = None
     pitch_variation_semitones: float | None = None
+    mean_f0_hz: float | None = None
     energy_db: float | None = None
+    spectral_centroid_hz: float | None = None
+    spectral_rolloff_hz: float | None = None
+    spectral_flatness: float | None = None
+    zero_crossing_rate: float | None = None
+    mfcc_means: tuple[float, ...] | None = None
     clarity_score: float | None = None
 
     def __post_init__(self) -> None:
@@ -44,6 +51,37 @@ class FeatureWindow:
             raise ValueError("pitch_variation_semitones cannot be negative")
         if self.clarity_score is not None and not 0 <= self.clarity_score <= 1:
             raise ValueError("clarity_score must be between 0 and 1")
+        numeric_values = (
+            self.start_seconds,
+            self.end_seconds,
+            self.speech_rate_wpm,
+            self.pause_seconds,
+            self.pitch_variation_semitones,
+            self.mean_f0_hz,
+            self.energy_db,
+            self.spectral_centroid_hz,
+            self.spectral_rolloff_hz,
+            self.spectral_flatness,
+            self.zero_crossing_rate,
+            self.clarity_score,
+        )
+        if any(value is not None and not math.isfinite(value) for value in numeric_values):
+            raise ValueError("feature measurements must be finite")
+        if self.mean_f0_hz is not None and self.mean_f0_hz <= 0:
+            raise ValueError("mean_f0_hz must be positive")
+        if self.spectral_centroid_hz is not None and self.spectral_centroid_hz < 0:
+            raise ValueError("spectral_centroid_hz cannot be negative")
+        if self.spectral_rolloff_hz is not None and self.spectral_rolloff_hz < 0:
+            raise ValueError("spectral_rolloff_hz cannot be negative")
+        if self.spectral_flatness is not None and not 0 <= self.spectral_flatness <= 1:
+            raise ValueError("spectral_flatness must be between 0 and 1")
+        if self.zero_crossing_rate is not None and not 0 <= self.zero_crossing_rate <= 1:
+            raise ValueError("zero_crossing_rate must be between 0 and 1")
+        if self.mfcc_means is not None:
+            if not 1 <= len(self.mfcc_means) <= 40:
+                raise ValueError("mfcc_means must contain between 1 and 40 coefficients")
+            if not all(math.isfinite(value) for value in self.mfcc_means):
+                raise ValueError("MFCC measurements must be finite")
 
 
 @dataclass(frozen=True, slots=True)
