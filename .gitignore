@@ -37,3 +37,5 @@ Thumbs.db
 
 # Separate private Sites deployment checkout and packages
 sites/
+tmp/
+output/

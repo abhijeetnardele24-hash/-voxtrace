@@ -212,7 +212,7 @@ No generative model is currently used at runtime to score speech. The current sc
 - [x] Add F0, FFT/cepstral, energy, pause, rate, and spectral features.
 - [x] Implement reference-vs-participant window comparison and visualization.
 - [ ] Run held-out-speaker evaluation and publish only measured results.
-- [x] Produce a standalone maximum six-page technical-report source.
+- [x] Produce and visually verify a five-page technical report plus editable source.
 - [x] Deploy and verify an owner-only production demo.
 - [ ] Make the verified demo public after the submission owner approves public access.
 - [ ] Record a 3–10 minute YouTube demo covering dataset construction, stress testing, and timestamped detections.
@@ -230,7 +230,8 @@ data/processed/             Generated summaries and evaluation outputs
 docs/architecture.md        Implemented and planned system boundaries
 docs/dataset-card.md        Dataset purpose, schema, licences, and safeguards
 docs/evaluation.md          Held-out evaluation protocol
-docs/technical-report.tex   Standalone submission technical report
+docs/technical-report.pdf   Verified five-page submission technical report
+docs/technical-report.tex   Editable standalone report source
 docs/devpost-submission.md  Prepared Devpost project story and metadata
 docs/demo-script.md         Six-minute demonstration script
 AI_ASSISTANCE.md            Required AI-tool disclosure
