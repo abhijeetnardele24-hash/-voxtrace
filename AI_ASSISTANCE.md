@@ -6,7 +6,8 @@ This project uses AI-assisted development tools where disclosed below. Human tea
 
 | Tool | Use |
 |---|---|
-| ByteAsk / ChatGPT | Planning, architecture discussion, code assistance, documentation support |
+| ByteAsk / ChatGPT | Planning, architecture discussion, code assistance, and documentation support |
+| OpenAI Codex | Repository audit, test verification, README and submission-readiness documentation |
 
 ## Disclosure rule
 
