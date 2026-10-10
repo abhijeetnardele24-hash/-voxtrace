@@ -345,8 +345,8 @@ function App() {
         <article className="panel">
           <p className="eyebrow">REPRODUCIBILITY</p><h2>Submission evidence</h2>
           <ul className="evidence-list">
-            <li><b>24 automated tests</b><span>API, DSP, alignment contracts, comparison, evaluation</span></li>
-            <li><b>Speaker-held-out evaluation</b><span>Tooling implemented; measured report requires the final dataset</span></li>
+            <li><b>26 automated tests</b><span>API, DSP, alignment contracts, comparison, evaluation</span></li>
+            <li><b>Speaker-held-out evaluation</b><span>Synthetic stress report complete; natural benchmark remains future work</span></li>
             <li><b>Forced alignment</b><span>Optional WhisperX phoneme alignment, explicitly gated on the server</span></li>
             <li><b>Transparent limits</b><span>No invented confidence, model accuracy, or dataset claims</span></li>
           </ul>
