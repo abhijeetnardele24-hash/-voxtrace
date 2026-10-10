@@ -1,0 +1,75 @@
+{
+  "dataset": {
+    "dataset_manifest": "data\\voxtrace-contrastive-1\\labels\\manifests.jsonl",
+    "held_out_recording_ids": [
+      "script-ls-6930-speaker-6930-reference",
+      "script-ls-6930-speaker-6930-near_perfect",
+      "script-ls-6930-speaker-6930-rushed",
+      "script-ls-6930-speaker-6930-excessive_pause",
+      "script-ls-6930-speaker-6930-low_energy",
+      "script-ls-6930-speaker-6930-mixed_flaws"
+    ],
+    "held_out_speakers": [
+      "speaker-6930"
+    ],
+    "labelled_intervals": 18,
+    "recordings": 18,
+    "scripts": [
+      "script-ls-2277",
+      "script-ls-374",
+      "script-ls-6930"
+    ],
+    "speakers": [
+      "speaker-2277",
+      "speaker-374",
+      "speaker-6930"
+    ],
+    "training_recording_ids": [
+      "script-ls-374-speaker-374-reference",
+      "script-ls-374-speaker-374-near_perfect",
+      "script-ls-374-speaker-374-rushed",
+      "script-ls-374-speaker-374-excessive_pause",
+      "script-ls-374-speaker-374-low_energy",
+      "script-ls-374-speaker-374-mixed_flaws",
+      "script-ls-2277-speaker-2277-reference",
+      "script-ls-2277-speaker-2277-near_perfect",
+      "script-ls-2277-speaker-2277-rushed",
+      "script-ls-2277-speaker-2277-excessive_pause",
+      "script-ls-2277-speaker-2277-low_energy",
+      "script-ls-2277-speaker-2277-mixed_flaws"
+    ]
+  },
+  "metrics": {
+    "by_category": {
+      "excessive_pause": {
+        "f1": 1.0,
+        "false_negatives": 0,
+        "false_positives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 2
+      },
+      "low_energy": {
+        "f1": 1.0,
+        "false_negatives": 0,
+        "false_positives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 2
+      },
+      "rushed_delivery": {
+        "f1": 1.0,
+        "false_negatives": 0,
+        "false_positives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 2
+      }
+    },
+    "label_note": "These metrics use deterministic transformation labels that remain pending, not human-reviewed ground truth. They measure pipeline behavior only and must not be presented as real-world accuracy.",
+    "macro_f1": 1.0,
+    "mean_matched_iou": 1.0,
+    "minimum_iou": 0.5,
+    "report_kind": "synthetic stress-test"
+  }
+}

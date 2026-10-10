@@ -29,6 +29,7 @@ def test_generator_creates_same_script_reviewable_spectrum(tmp_path: Path) -> No
             licence="CC0",
             consent_record="test-consent",
             output=str(output),
+            append=False,
         )
     )
 
@@ -49,3 +50,7 @@ def test_generator_creates_same_script_reviewable_spectrum(tmp_path: Path) -> No
         for item in manifests
         for label in item.labels
     )
+    near_perfect = next(item for item in manifests if item.variant_type == "near_perfect")
+    pause = next(item for item in manifests if item.variant_type == "excessive_pause")
+    assert near_perfect.labels == ()
+    assert pause.labels[0].end_seconds - pause.labels[0].start_seconds == 1.8

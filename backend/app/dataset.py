@@ -121,7 +121,7 @@ class RecordingManifest:
             raise ValueError("sample_rate_hz must be between 8000 and 192000")
         if manifest.variant_type == "reference" and manifest.labels:
             raise ValueError("reference recordings must not contain intentional flaw labels")
-        if manifest.variant_type != "reference" and not manifest.labels:
+        if manifest.variant_type not in {"reference", "near_perfect"} and not manifest.labels:
             raise ValueError("non-reference recordings require at least one temporal label")
         for label in manifest.labels:
             if label.end_seconds > manifest.duration_seconds:

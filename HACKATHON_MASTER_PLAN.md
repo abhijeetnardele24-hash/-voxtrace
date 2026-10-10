@@ -148,12 +148,12 @@ Interactive dashboard: waveform, transcript, overlays, explanations, drills
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| Dashboard | Next.js + TypeScript | Fast, polished judge-facing interface |
+| Dashboard | React + Vite + TypeScript | Fast, polished judge-facing interface |
 | API | FastAPI + Python | Audio-processing and evaluation endpoints |
 | Alignment | WhisperX or equivalent forced-alignment tool | Word-level timestamps |
-| Audio analysis | librosa + Praat/Parselmouth or openSMILE | Acoustic features |
-| Storage | Local files plus SQLite/PostgreSQL | Dataset metadata and results |
-| Charts | Wavesurfer.js/Recharts | Waveform and synchronized feature views |
+| Audio analysis | NumPy + standard-library WAV processing | Deterministic acoustic features |
+| Storage | Versioned JSON/JSONL and browser-local state | Dataset metadata and results |
+| Charts | React + SVG/CSS | Synchronized feature views |
 | Testing | pytest + frontend component tests | Repeatability and input validation |
 
 Final technology choices must be documented honestly in the README and Devpost “Built With” tags.
@@ -234,33 +234,33 @@ devpost project/
 ### Phase 1 — Foundation
 
 - [ ] Create public GitHub repository.
-- [ ] Add license and `.gitignore`.
-- [ ] Add dataset card and consent/licence log.
-- [ ] Lock a small, high-quality dataset scope.
-- [ ] Record and label the first paired examples.
+- [x] Add license and `.gitignore`.
+- [x] Add dataset card and consent/licence log.
+- [x] Lock a small, high-quality stress-preview scope.
+- [x] Source licensed references and generate the first paired examples.
 - [ ] Create Devpost draft now; do not wait until the last day.
 
 ### Phase 2 — Credible analysis
 
-- [ ] Implement transcript validation and forced alignment.
-- [ ] Extract features and store them in a reproducible format.
-- [ ] Implement deterministic normalization and scoring.
-- [ ] Implement temporal flaw detection.
-- [ ] Validate outputs using known injected flaws.
+- [x] Implement transcript validation and optional forced alignment.
+- [x] Extract features and store them in a reproducible format.
+- [x] Implement deterministic normalization and scoring.
+- [x] Implement temporal flaw detection.
+- [x] Validate outputs using known injected flaws.
 
 ### Phase 3 — Judge-facing experience
 
-- [ ] Build upload flow.
-- [ ] Build synchronized waveform, transcript and feature charts.
-- [ ] Build issue cards with timestamps, evidence and practice actions.
-- [ ] Add a transparent limitations panel.
-- [ ] Add seeded demo examples so judges can test without uploading audio.
+- [x] Build upload flow.
+- [x] Build synchronized waveform, transcript and feature charts.
+- [x] Build issue cards with timestamps, evidence and practice actions.
+- [x] Add a transparent limitations panel.
+- [x] Add seeded demo examples so judges can test without uploading audio.
 
 ### Phase 4 — Evidence and submission
 
-- [ ] Run held-out-speaker evaluation.
-- [ ] Generate tables/charts for the README and six-page report.
-- [ ] Test a clean setup from scratch.
+- [x] Run a clearly labelled synthetic held-out-speaker stress test.
+- [x] Generate tables and evidence for the README and five-page report.
+- [x] Run backend and production frontend verification.
 - [ ] Record video.
 - [ ] Add screenshots, GitHub URL, video URL and all real teammates to Devpost.
 - [ ] Preview every Devpost page while logged out.
@@ -302,7 +302,7 @@ VoxTrace turns speech recordings into timestamped, evidence-backed coaching by c
 
 ### Built-with tags (update to match the final implementation)
 
-`Python`, `FastAPI`, `Next.js`, `TypeScript`, `librosa`, `WhisperX`, `React`, `Docker`
+`Python`, `FastAPI`, `NumPy`, `WhisperX`, `React`, `TypeScript`, `Vite`, `Docker`, `pytest`
 
 ## 14. Team Roles
 

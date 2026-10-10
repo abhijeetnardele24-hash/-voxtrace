@@ -1,0 +1,40 @@
+{
+  "dataset_manifest": "data\\voxtrace-contrastive-1\\labels\\manifests.jsonl",
+  "held_out_recording_ids": [
+    "script-ls-6930-speaker-6930-reference",
+    "script-ls-6930-speaker-6930-near_perfect",
+    "script-ls-6930-speaker-6930-rushed",
+    "script-ls-6930-speaker-6930-excessive_pause",
+    "script-ls-6930-speaker-6930-low_energy",
+    "script-ls-6930-speaker-6930-mixed_flaws"
+  ],
+  "held_out_speakers": [
+    "speaker-6930"
+  ],
+  "labelled_intervals": 18,
+  "recordings": 18,
+  "scripts": [
+    "script-ls-2277",
+    "script-ls-374",
+    "script-ls-6930"
+  ],
+  "speakers": [
+    "speaker-2277",
+    "speaker-374",
+    "speaker-6930"
+  ],
+  "training_recording_ids": [
+    "script-ls-374-speaker-374-reference",
+    "script-ls-374-speaker-374-near_perfect",
+    "script-ls-374-speaker-374-rushed",
+    "script-ls-374-speaker-374-excessive_pause",
+    "script-ls-374-speaker-374-low_energy",
+    "script-ls-374-speaker-374-mixed_flaws",
+    "script-ls-2277-speaker-2277-reference",
+    "script-ls-2277-speaker-2277-near_perfect",
+    "script-ls-2277-speaker-2277-rushed",
+    "script-ls-2277-speaker-2277-excessive_pause",
+    "script-ls-2277-speaker-2277-low_energy",
+    "script-ls-2277-speaker-2277-mixed_flaws"
+  ]
+}

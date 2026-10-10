@@ -7,26 +7,26 @@
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Tests](https://img.shields.io/badge/tests-24%20passing-brightgreen)](#verification)
+[![Tests](https://img.shields.io/badge/tests-26%20passing-brightgreen)](#verification)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 VoxTrace is a Track C entry for the [Multimodal AI Hackathon 2026](https://multimodal-ai-hackathon-2026-7.devpost.com/). It turns a speech recording and transcript into timestamped delivery findings, measured acoustic evidence, and focused practice actions. The project is designed around a strict rule: if a number is not computed from the input, VoxTrace does not display it.
 
 ## Submission status
 
-VoxTrace is an actively developed hackathon prototype. The deterministic analysis engine, ideal-vs-target comparison, optional phoneme forced-alignment path, dataset-generation tooling, evaluation tooling, and judge-facing dashboard work. An owner-only production preview is deployed; public access, the final licensed multi-speaker dataset, reviewed labels, measured held-out results, and video still require submission-owner input.
+VoxTrace is an actively developed hackathon prototype. The deterministic analysis engine, ideal-vs-target comparison, optional phoneme forced-alignment path, dataset-generation tooling, evaluation tooling, and judge-facing dashboard work. The repository now includes an 18-recording, three-speaker licensed stress preview derived from LibriSpeech (CC BY 4.0), plus a speaker-held-out pipeline stress report. Its generated labels remain pending and are not human-reviewed ground truth. Public access, a natural-speech reviewed benchmark, and the video still require submission-owner input.
 
 | Track C requirement | Current evidence | Status |
 |---|---|---|
-| Custom ideal-vs-flawed dataset | Versioned schema, generator, dataset card, manifest validator, speaker-held-out splitter, example manifests | In progress — real licensed recordings and reviewed labels are required |
+| Custom ideal-vs-flawed dataset | 18 checked-in WAVs from three licensed LibriSpeech references, deterministic contrastive variants, manifests, dataset card, validator, and speaker-held-out splitter | Stress preview complete; natural recordings and human review remain |
 | Forced alignment | Guarded optional WhisperX phoneme-alignment endpoint plus validated word-timestamp contracts | Implemented as an optional worker; model installation and pre-warming required |
 | Acoustic features | dBFS energy, silence, F0, pitch variation, FFT descriptors, 13 cepstral coefficients, aligned speech rate and pauses | Implemented; clarity remains deliberately absent unless supplied by a validated method |
 | Temporal flaw grounding | Deterministic window scoring with exact start/end timestamps | Implemented for supplied feature windows |
 | Causal explanations | Every finding includes measured evidence and a practice action | Implemented |
 | Interactive dashboard | Dual audio input, seeded demo, scorecard, data completeness, paired timeline, findings, limitations, and browser-local fallback | Implemented |
 | Baseline comparison overlay | Measured ideal-vs-target windows and normalized same-script mapping | Implemented |
-| Evaluation | Interval IoU, per-class precision/recall/F1, macro F1, and CLI report generation | Implemented tooling; real results pending dataset |
-| Reproducibility | Dockerfile, pinned dependency ranges, deterministic logic, 24 backend tests | Implemented |
+| Evaluation | Recording-scoped interval IoU, per-class precision/recall/F1, macro F1, and CLI reports | Synthetic held-out stress test complete; real-world accuracy remains unmeasured |
+| Reproducibility | Dockerfile, pinned dependency ranges, deterministic logic, 26 backend tests | Implemented |
 
 ## What works today
 
@@ -145,7 +145,7 @@ python -m backend.contrastive_cli \
 
 Generated labels are intentionally marked `pending`; a human must review their exact intervals before evaluation.
 
-The repository currently includes only synthetic example metadata, not a completed dataset or competition results. See the [dataset card](docs/dataset-card.md).
+The repository includes the licensed preview at `data/voxtrace-contrastive-1`. Its transformation labels are intentionally `pending`; they describe the deterministic edits and support pipeline stress testing, but they are not human-reviewed truth. See the [dataset card](docs/dataset-card.md) and the preview's [provenance README](data/voxtrace-contrastive-1/README.md).
 
 ## Evaluation
 
@@ -160,6 +160,8 @@ python -m backend.cli evaluate \
 ```
 
 The evaluator reports interval IoU, per-category precision/recall/F1, macro F1, and mean matched IoU. No accuracy, F1, latency, user-study, or dataset-size claim should be made until it has been measured and committed. The full protocol is in [docs/evaluation.md](docs/evaluation.md).
+
+The checked-in synthetic stress test holds out `speaker-6930` and obtains macro F1 1.000 and mean matched IoU 1.000 on deterministic transformations. This is a pipeline-integrity result, not a claim about natural speech or human agreement; see [the generated report](docs/stress-test-results.md).
 
 ## Verification
 
@@ -176,9 +178,9 @@ npm ci --prefix frontend
 npm run build --prefix frontend
 ```
 
-Verified on 10 October 2026:
+Verified on 11 October 2026:
 
-- 24 backend tests passed.
+- 26 backend tests passed.
 - TypeScript compilation and Vite production build passed.
 
 Container build and run:
@@ -206,12 +208,14 @@ No generative model is currently used at runtime to score speech. The current sc
 
 ## Roadmap to submission
 
-- [ ] Record or source a small, licensed contrastive dataset with the exact same scripts across the quality spectrum.
+- [x] Source licensed references and publish an 18-recording deterministic contrastive stress preview.
+- [ ] Record natural same-script contrastive deliveries with participant consent.
 - [ ] Complete temporal labels and second-review a representative sample.
 - [x] Integrate and document an optional phoneme forced-alignment engine.
 - [x] Add F0, FFT/cepstral, energy, pause, rate, and spectral features.
 - [x] Implement reference-vs-participant window comparison and visualization.
-- [ ] Run held-out-speaker evaluation and publish only measured results.
+- [x] Run and clearly label a held-out-speaker synthetic pipeline stress test.
+- [ ] Run the final held-out-speaker evaluation on human-reviewed natural labels.
 - [x] Produce and visually verify a five-page technical report plus editable source.
 - [x] Deploy and verify an owner-only production demo.
 - [ ] Make the verified demo public after the submission owner approves public access.
@@ -225,11 +229,13 @@ backend/                    FastAPI application and CLI
 frontend/                   React + TypeScript dashboard
 tests/                      Backend unit and API tests
 data/labels/                Dataset manifests and examples
+data/voxtrace-contrastive-1 Licensed 18-recording stress preview and generated reports
 data/raw/                   Local-only/raw audio placeholder
 data/processed/             Generated summaries and evaluation outputs
 docs/architecture.md        Implemented and planned system boundaries
 docs/dataset-card.md        Dataset purpose, schema, licences, and safeguards
 docs/evaluation.md          Held-out evaluation protocol
+docs/stress-test-results.md Clearly labelled synthetic pipeline stress-test results
 docs/technical-report.pdf   Verified five-page submission technical report
 docs/technical-report.tex   Editable standalone report source
 docs/devpost-submission.md  Prepared Devpost project story and metadata

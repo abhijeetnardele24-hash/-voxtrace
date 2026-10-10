@@ -1,0 +1,173 @@
+[
+  {
+    "recording_id": "script-ls-6930-speaker-6930-rushed",
+    "finding_type": "rushed_delivery",
+    "start_seconds": 0.0,
+    "end_seconds": 18.215,
+    "severity": 0.11,
+    "evidence": "Speech rate measured 211 WPM; the selected profile caps this segment at 189 WPM.",
+    "practice_action": "Rerecord this sentence more slowly and pause after its key claim."
+  },
+  {
+    "recording_id": "script-ls-6930-speaker-6930-excessive_pause",
+    "finding_type": "excessive_pause",
+    "start_seconds": 12.823,
+    "end_seconds": 14.623,
+    "severity": 0.75,
+    "evidence": "Digital-silence stress interval measured 1.80s.",
+    "practice_action": "Link the surrounding phrases with a shorter transition."
+  },
+  {
+    "recording_id": "script-ls-6930-speaker-6930-low_energy",
+    "finding_type": "low_energy",
+    "start_seconds": 0.0,
+    "end_seconds": 23.315,
+    "severity": 0.22,
+    "evidence": "Energy measured -38.9 dB; the selected profile targets at least -32.0 dB.",
+    "practice_action": "Move closer to the microphone and deliver this line with supported breath."
+  },
+  {
+    "recording_id": "script-ls-6930-speaker-6930-mixed_flaws",
+    "finding_type": "low_energy",
+    "start_seconds": 0.0,
+    "end_seconds": 21.029,
+    "severity": 0.26,
+    "evidence": "Energy measured -40.3 dB; the selected profile targets at least -32.0 dB.",
+    "practice_action": "Move closer to the microphone and deliver this line with supported breath."
+  },
+  {
+    "recording_id": "script-ls-6930-speaker-6930-mixed_flaws",
+    "finding_type": "rushed_delivery",
+    "start_seconds": 0.0,
+    "end_seconds": 21.029,
+    "severity": 0.04,
+    "evidence": "Speech rate measured 198 WPM; the selected profile caps this segment at 189 WPM.",
+    "practice_action": "Rerecord this sentence more slowly and pause after its key claim."
+  },
+  {
+    "recording_id": "script-ls-6930-speaker-6930-mixed_flaws",
+    "finding_type": "excessive_pause",
+    "start_seconds": 10.686,
+    "end_seconds": 12.286,
+    "severity": 0.67,
+    "evidence": "Digital-silence stress interval measured 1.60s.",
+    "practice_action": "Link the surrounding phrases with a shorter transition."
+  },
+  {
+    "recording_id": "script-ls-374-speaker-374-rushed",
+    "finding_type": "rushed_delivery",
+    "start_seconds": 0.0,
+    "end_seconds": 12.566,
+    "severity": 0.11,
+    "evidence": "Speech rate measured 210 WPM; the selected profile caps this segment at 189 WPM.",
+    "practice_action": "Rerecord this sentence more slowly and pause after its key claim."
+  },
+  {
+    "recording_id": "script-ls-374-speaker-374-excessive_pause",
+    "finding_type": "excessive_pause",
+    "start_seconds": 8.847,
+    "end_seconds": 10.647,
+    "severity": 0.75,
+    "evidence": "Digital-silence stress interval measured 1.80s.",
+    "practice_action": "Link the surrounding phrases with a shorter transition."
+  },
+  {
+    "recording_id": "script-ls-374-speaker-374-low_energy",
+    "finding_type": "low_energy",
+    "start_seconds": 0.0,
+    "end_seconds": 16.085,
+    "severity": 0.2,
+    "evidence": "Energy measured -40.7 dB; the selected profile targets at least -33.8 dB.",
+    "practice_action": "Move closer to the microphone and deliver this line with supported breath."
+  },
+  {
+    "recording_id": "script-ls-374-speaker-374-mixed_flaws",
+    "finding_type": "low_energy",
+    "start_seconds": 0.0,
+    "end_seconds": 15.004,
+    "severity": 0.08,
+    "evidence": "Energy measured -36.6 dB; the selected profile targets at least -33.8 dB.",
+    "practice_action": "Move closer to the microphone and deliver this line with supported breath."
+  },
+  {
+    "recording_id": "script-ls-374-speaker-374-mixed_flaws",
+    "finding_type": "rushed_delivery",
+    "start_seconds": 0.0,
+    "end_seconds": 15.004,
+    "severity": 0.04,
+    "evidence": "Speech rate measured 197 WPM; the selected profile caps this segment at 189 WPM.",
+    "practice_action": "Rerecord this sentence more slowly and pause after its key claim."
+  },
+  {
+    "recording_id": "script-ls-374-speaker-374-mixed_flaws",
+    "finding_type": "excessive_pause",
+    "start_seconds": 7.372,
+    "end_seconds": 8.972,
+    "severity": 0.67,
+    "evidence": "Digital-silence stress interval measured 1.60s.",
+    "practice_action": "Link the surrounding phrases with a shorter transition."
+  },
+  {
+    "recording_id": "script-ls-2277-speaker-2277-rushed",
+    "finding_type": "rushed_delivery",
+    "start_seconds": 0.0,
+    "end_seconds": 5.582,
+    "severity": 0.11,
+    "evidence": "Speech rate measured 279 WPM; the selected profile caps this segment at 251 WPM.",
+    "practice_action": "Rerecord this sentence more slowly and pause after its key claim."
+  },
+  {
+    "recording_id": "script-ls-2277-speaker-2277-excessive_pause",
+    "finding_type": "low_energy",
+    "start_seconds": 0.0,
+    "end_seconds": 8.945,
+    "severity": 0.07,
+    "evidence": "Energy measured -32.5 dB; the selected profile targets at least -30.5 dB.",
+    "practice_action": "Move closer to the microphone and deliver this line with supported breath."
+  },
+  {
+    "recording_id": "script-ls-2277-speaker-2277-excessive_pause",
+    "finding_type": "excessive_pause",
+    "start_seconds": 3.93,
+    "end_seconds": 5.73,
+    "severity": 0.75,
+    "evidence": "Digital-silence stress interval measured 1.80s.",
+    "practice_action": "Link the surrounding phrases with a shorter transition."
+  },
+  {
+    "recording_id": "script-ls-2277-speaker-2277-low_energy",
+    "finding_type": "low_energy",
+    "start_seconds": 0.0,
+    "end_seconds": 7.145,
+    "severity": 0.23,
+    "evidence": "Energy measured -37.4 dB; the selected profile targets at least -30.5 dB.",
+    "practice_action": "Move closer to the microphone and deliver this line with supported breath."
+  },
+  {
+    "recording_id": "script-ls-2277-speaker-2277-mixed_flaws",
+    "finding_type": "low_energy",
+    "start_seconds": 0.0,
+    "end_seconds": 7.554,
+    "severity": 0.15,
+    "evidence": "Energy measured -35.0 dB; the selected profile targets at least -30.5 dB.",
+    "practice_action": "Move closer to the microphone and deliver this line with supported breath."
+  },
+  {
+    "recording_id": "script-ls-2277-speaker-2277-mixed_flaws",
+    "finding_type": "rushed_delivery",
+    "start_seconds": 0.0,
+    "end_seconds": 7.554,
+    "severity": 0.04,
+    "evidence": "Speech rate measured 262 WPM; the selected profile caps this segment at 251 WPM.",
+    "practice_action": "Rerecord this sentence more slowly and pause after its key claim."
+  },
+  {
+    "recording_id": "script-ls-2277-speaker-2277-mixed_flaws",
+    "finding_type": "excessive_pause",
+    "start_seconds": 3.275,
+    "end_seconds": 4.875,
+    "severity": 0.67,
+    "evidence": "Digital-silence stress interval measured 1.60s.",
+    "practice_action": "Link the surrounding phrases with a shorter transition."
+  }
+]

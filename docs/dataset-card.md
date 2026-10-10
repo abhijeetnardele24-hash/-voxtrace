@@ -8,6 +8,12 @@ This dataset supports reproducible analysis of delivery deviations in spoken pre
 
 One audio recording of one scripted segment, paired with a transcript, a delivery variant, and timestamped labels for intentionally introduced deviations.
 
+## Checked-in preview (11 October 2026)
+
+The repository contains an 18-recording preview derived from three LibriSpeech utterances representing three pseudonymous speakers and three scripts. LibriSpeech is distributed under CC BY 4.0. Each licensed reference has near-perfect, rushed, excessive-pause, low-energy, and mixed-flaw variants generated deterministically by the checked-in CLI.
+
+The preview's transformation labels remain `pending`. They document exact generated intervals and support pipeline stress testing, but they are not human-reviewed ground truth and are not used to claim final real-world accuracy.
+
 ## Required metadata
 
 - recording ID and script ID
@@ -17,6 +23,7 @@ One audio recording of one scripted segment, paired with a transcript, a deliver
 - transcript
 - label reviewer
 - acoustic extraction configuration
+- upstream dataset, utterance identifier, and derivative licence obligations
 
 ## Splits
 

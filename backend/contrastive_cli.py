@@ -34,11 +34,13 @@ def _insert_pause(samples: np.ndarray, sample_rate_hz: int, seconds: float) -> n
     return np.concatenate((samples[:split], silence, samples[split:]))
 
 
-def _label(kind: str, duration: float, severity: float) -> dict[str, object]:
+def _label(
+    kind: str, start_seconds: float, end_seconds: float, severity: float
+) -> dict[str, object]:
     return {
         "finding_type": kind,
-        "start_seconds": 0.0,
-        "end_seconds": round(duration, 3),
+        "start_seconds": round(start_seconds, 3),
+        "end_seconds": round(end_seconds, 3),
         "severity": severity,
         "reviewer_status": "pending",
     }
@@ -54,20 +56,38 @@ def build_dataset(args: argparse.Namespace) -> Path:
     labels_dir.mkdir(parents=True, exist_ok=True)
     samples = np.asarray(audio.samples, dtype=np.float64)
 
-    variants: dict[str, tuple[np.ndarray, list[tuple[str, float]]]] = {
+    variants: dict[
+        str, tuple[np.ndarray, list[tuple[str, float, float | None, float]]]
+    ] = {
         "reference": (samples, []),
-        "near_perfect": (samples * 0.9, [("low_energy", 0.1)]),
-        "rushed": (_speed(samples, 1.28), [("rushed_delivery", 0.7)]),
+        "near_perfect": (samples * 0.9, []),
+        "rushed": (_speed(samples, 1.28), [("rushed_delivery", 0.0, None, 0.7)]),
         "excessive_pause": (
             _insert_pause(samples, audio.sample_rate_hz, 1.8),
-            [("excessive_pause", 0.75)],
+            [
+                (
+                    "excessive_pause",
+                    audio.duration_seconds * 0.55,
+                    audio.duration_seconds * 0.55 + 1.8,
+                    0.75,
+                )
+            ],
         ),
-        "low_energy": (samples * 0.32, [("low_energy", 0.75)]),
+        "low_energy": (samples * 0.32, [("low_energy", 0.0, None, 0.75)]),
     }
     mixed = _insert_pause(_speed(samples, 1.2), audio.sample_rate_hz, 1.6) * 0.42
     variants["mixed_flaws"] = (
         mixed,
-        [("rushed_delivery", 0.55), ("excessive_pause", 0.65), ("low_energy", 0.6)],
+        [
+            ("rushed_delivery", 0.0, None, 0.55),
+            (
+                "excessive_pause",
+                (audio.duration_seconds / 1.2) * 0.55,
+                (audio.duration_seconds / 1.2) * 0.55 + 1.6,
+                0.65,
+            ),
+            ("low_energy", 0.0, None, 0.6),
+        ],
     )
 
     manifests: list[dict[str, object]] = []
@@ -91,15 +111,17 @@ def build_dataset(args: argparse.Namespace) -> Path:
                 "licence": args.licence,
                 "consent_record": args.consent_record,
                 "transcript": args.transcript,
-                "labels": [_label(kind, duration, severity) for kind, severity in labels],
+                "labels": [
+                    _label(kind, start, duration if end is None else end, severity)
+                    for kind, start, end, severity in labels
+                ],
             }
         )
 
     manifest_path = labels_dir / "manifests.jsonl"
-    manifest_path.write_text(
-        "\n".join(json.dumps(item, ensure_ascii=False) for item in manifests) + "\n",
-        encoding="utf-8",
-    )
+    mode = "a" if args.append and manifest_path.exists() else "w"
+    with manifest_path.open(mode, encoding="utf-8") as stream:
+        stream.write("\n".join(json.dumps(item, ensure_ascii=False) for item in manifests) + "\n")
     return manifest_path
 
 
@@ -114,6 +136,7 @@ def main() -> None:
     parser.add_argument("--licence", required=True)
     parser.add_argument("--consent-record", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--append", action="store_true", help="append to an existing manifest")
     args = parser.parse_args()
     print(build_dataset(args))
 

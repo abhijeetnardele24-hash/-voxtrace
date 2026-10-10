@@ -26,6 +26,8 @@ The backend uses Python, FastAPI, NumPy, and an optional WhisperX phoneme-alignm
 
 Dataset tooling validates licences and consent records, creates a deterministic speaker-held-out split, and generates reviewable same-script stress variants from licensed reference recordings. Evaluation tooling reports temporal intersection-over-union, per-category precision/recall/F1, macro F1, and mean matched IoU.
 
+For the checked-in preview, we selected three LibriSpeech utterances distributed under CC BY 4.0 and generated five deterministic contrastive variants per reference. This produces 18 WAV recordings across three pseudonymous speakers and scripts. Generated temporal labels stay visibly pending until human review.
+
 ### Challenges
 
 The main challenge was preserving scientific honesty under hackathon time pressure. It is easy to display impressive-looking confidence values or stretch transcript words evenly across an audio file. VoxTrace does neither. Forced alignment has explicit provenance, the resource-heavy model is isolated behind a guarded optional endpoint, and every unsupported metric is omitted.
@@ -39,8 +41,10 @@ Another challenge was comparing recordings with different durations. The current
 - FFT-derived spectral descriptors, compact cepstral coefficients, F0, energy, silence, pitch variation, and word-timing contracts.
 - Optional WhisperX phoneme forced alignment with strict server-side gating.
 - Reproducible contrastive-dataset generation and validation tooling.
+- An 18-recording licensed stress preview with source IDs, licence provenance, and deterministic transformations.
 - Speaker-held-out temporal evaluation utilities.
-- 24 passing backend tests and a verified production frontend build.
+- A clearly labelled speaker-held-out synthetic stress test (macro F1 1.000, mean matched IoU 1.000) that verifies pipeline integrity without claiming natural-speech accuracy.
+- 26 passing backend tests and a verified production frontend build.
 - Transparent AI-assistance, privacy, licensing, and responsible-use documentation.
 
 ### What we learned
@@ -49,7 +53,7 @@ Temporal grounding is not the same as attaching a timestamp to generic feedback.
 
 ### What's next
 
-Before final submission we will finish the licensed multi-speaker contrastive dataset, review its labels, run the held-out-speaker evaluation, deploy the public demo, and publish the measured results and demo video. Future work includes multilingual alignment profiles, microphone-condition normalization, richer synchronized transcript highlighting, and user-controlled encrypted persistence.
+Before final submission we will review the generated labels, make the verified demo and repository public, and publish the demo video. A future natural-speech benchmark will add consented same-script recordings and second-review the labels before any real-world accuracy claim. Longer-term work includes multilingual alignment profiles, microphone-condition normalization, richer synchronized transcript highlighting, and user-controlled encrypted persistence.
 
 ## Built with
 
@@ -58,11 +62,11 @@ Before final submission we will finish the licensed multi-speaker contrastive da
 ## Links
 
 - GitHub: <https://github.com/abhijeetnardele24-hash/-voxtrace>
-- Live demo: `<add deployment URL>`
+- Live demo (currently owner-only): <https://voxtrace-speech-audit.exactgoat128.chatgpt.site>
 - Video: `<add public or unlisted YouTube URL>`
 
 ## Additional information
 
-- Team name: `<provide team name>`
+- Team name: MetaMask
 - Track: Track C
-- Team leader email: `<provide email>`
+- Team leader email: abhinardele006@gmail.com
